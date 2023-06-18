@@ -11,13 +11,13 @@ spring:
         locator:
           enabled: true
       routes:
-        - id:
-          uri:
+        - id: userById
+          uri: lb://company-users-service
           predicates:
-            -
-
-
-
+            - Path=/api/users/{userid}
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
 eureka:
   client:
     serviceUrl:
