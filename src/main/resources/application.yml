@@ -7,19 +7,54 @@ spring:
     import: optional:configserver:http://localhost:8888
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
       routes:
         - id: userById
           uri: lb://company-users-service
           predicates:
-            - Path=/api/users/{userid}
+            - Path=/company-users-service/api/users/{userId}
+            - Method=GET
+            - Header=Authorization, Bearer (.*)
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/company-users-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        - id: userById
+          uri: lb://company-users-service
+          predicates:
+            - Path=/company-users-service/api/users/{userId}
+            - Method=GET
+            - Header=Authorization, Bearer (.*)
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/company-users-service/(?<segment>.*), /$\{segment}
+        - id: userById
+          uri: lb://company-users-service
+          predicates:
+            - Path=/company-users-service/api/users/{userId}
+            - Method=GET
+            - Header=Authorization, Bearer (.*)
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/company-users-service/(?<segment>.*), /$\{segment}
+        - id: userById
+          uri: lb://company-users-service
+          predicates:
+            - Path=/company-users-service/api/users/{userId}
+            - Method=GET
+            - Header=Authorization, Bearer (.*)
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/company-users-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        - id: users-actuator
+          uri: lb://company-users-service
+          predicates:
+            - Path=/company-users-service/actuator/**
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookie
+            - RewritePath=/company-users-service/(?<segment>.*), /$\{segment}
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
-
